@@ -1,0 +1,53 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "9e0fb43fcfd35f2bbfbb",
+  "position": {
+    "x": 24,
+    "y": 520,
+    "z": 7000,
+    "height": 104,
+    "width": 400,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_backtest"
+                    }
+                  },
+                  "Property": "Basel zone, last 250 days"
+                }
+              },
+              "queryRef": "fact_backtest.Basel zone, last 250 days",
+              "nativeQueryRef": "Basel zone, last 250 days"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

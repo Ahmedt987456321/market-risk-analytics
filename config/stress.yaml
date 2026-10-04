@@ -1,0 +1,44 @@
+# Stress scenarios, applied to today's book with full revaluation and no trading.
+# Reasoning and sources for every date are in DECISIONS.md (014).
+
+historical:
+  - id: lehman_2008
+    name: Lehman Brothers failure, 2008
+    # Lehman filed for Chapter 11 on 15 Sep 2008 (its SEC 8-K). Window: from the
+    # last close before the filing, 20 market days forward.
+    start: 2008-09-12
+    market_days: 20
+  - id: covid_2020
+    name: COVID crash, 2020
+    # S&P 500 peak close 19 Feb 2020 to trough close 23 Mar 2020 (FRED SP500).
+    start: 2020-02-19
+    end: 2020-03-23
+  - id: gilt_2022
+    name: UK gilt crisis, 2022
+    # Growth Plan published 23 Sep 2022 (gov.uk); Bank of England announced gilt
+    # purchases on 28 Sep 2022 (BoE). Window: last close before the Growth Plan to
+    # the last close before the intervention.
+    start: 2022-09-22
+    end: 2022-09-27
+
+# Hypothetical shocks. These are our own round numbers, not taken from any
+# regulator or firm. Select factors by asset_class, desk or ids.
+#   pct: move the level by this percentage (prices, FX rates)
+#   pp:  move the level by this many percentage points (yields)
+# FX rates are foreign currency per GBP, so pct -10 means sterling falls 10%.
+hypothetical:
+  - id: equities_down_15
+    name: All equities -15%
+    shocks: [{asset_class: equity, pct: -15}]
+  - id: rates_up_100bp
+    name: All yields +100bp
+    shocks: [{asset_class: rates, pp: 1.0}]
+  - id: gbp_down_10
+    name: Sterling -10% against every currency
+    shocks: [{asset_class: fx, pct: -10}]
+  - id: uk_crisis
+    name: UK crisis (gilts +150bp, sterling -8%, UK equities -10%)
+    shocks:
+      - {ids: [GILT_5Y, GILT_10Y, GILT_20Y], pp: 1.5}
+      - {asset_class: fx, pct: -8}
+      - {desk: UK Equities, pct: -10}

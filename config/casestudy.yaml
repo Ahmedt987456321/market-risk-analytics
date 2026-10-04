@@ -1,0 +1,26 @@
+# Figures typed in by hand from documents that have no machine-readable form.
+# Each entry records exactly where it came from. Checked 29 Sep 2026.
+
+pillar3_uk:
+  source: >-
+    Goldman Sachs Group UK Limited, Pillar 3 Disclosures, Q4 2025 (gsguk-q4-2025-pillar-3.pdf),
+    Table 16 "IMA Values for Trading Portfolios", six months ended December 2025, USD millions.
+    GSGUK and GSI columns are identical.
+  period: H2 2025
+  var_10d_99: {max: 356, average: 216, min: 162, period_end: 182}
+  svar_10d_99: {max: 749, average: 588, min: 486, period_end: 593}
+  backtesting: >-
+    GSI hypothetical losses exceeded 99% one-day regulatory VaR 3 times in the 12 months to
+    Dec 2025 (two in April 2025, one in May 2025); actual losses 0 times; multiplier 3.
+  method_notes: >-
+    Historical simulation with full valuation, five years of history weighted towards recent data;
+    10-day VaR is one-day VaR times sqrt(10); regulatory VaR is multiplied by a scaler to give an
+    effective observation period of at least one year.
+
+# Episodes to decompose (quarter ends). Chosen for the events they cover, not for their results;
+# note the decomposition was first run on exactly these four while building the code.
+episodes:
+  - {from: 2019-12-31, to: 2020-03-31, name: "COVID crash"}
+  - {from: 2021-12-31, to: 2022-06-30, name: "2022 rate rises"}
+  - {from: 2025-03-31, to: 2025-06-30, name: "April 2025 tariff sell-off"}
+  - {from: 2026-03-31, to: 2026-06-30, name: "Latest quarter"}

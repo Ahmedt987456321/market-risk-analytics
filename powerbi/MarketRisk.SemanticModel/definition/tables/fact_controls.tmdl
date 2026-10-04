@@ -1,0 +1,89 @@
+table fact_controls
+	lineageTag: 54f6733a-6d93-53d4-9900-f4c7e48ea3eb
+
+	measure 'Checks passed' = CALCULATE ( COUNTROWS ( fact_controls ), fact_controls[status] IN { "PASS", "INFO" } ) + 0
+		formatString: 0
+		lineageTag: 5ce4fc2d-39b9-59cb-acd9-00704c598432
+
+	measure 'Warnings' = CALCULATE ( COUNTROWS ( fact_controls ), fact_controls[status] = "WARN" ) + 0
+		formatString: 0
+		lineageTag: 6aec3c4e-d783-551f-93bd-0b0b1a2b8c30
+
+	measure 'Failures' = CALCULATE ( COUNTROWS ( fact_controls ), fact_controls[status] = "FAIL" ) + 0
+		formatString: 0
+		lineageTag: ec00a5b1-942c-55a8-870c-49fbfebbb96b
+
+	measure 'Data checks' = [Checks passed] & " passed, " & [Warnings] & " warnings, " & [Failures] & " failed"
+		lineageTag: a9771bec-30ac-50af-b681-7f07e60223bd
+
+	column 'date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: 5e941db1-1858-5ddc-affc-832289a3fdb2
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+	column 'control'
+		dataType: string
+		lineageTag: 1cca4f79-5be6-5195-bf2b-15126d3b26b7
+		summarizeBy: none
+		sourceColumn: control
+
+		annotation SummarizationSetBy = User
+
+	column 'status'
+		dataType: string
+		lineageTag: 9e94434b-62de-5250-a768-5b314cad15df
+		summarizeBy: none
+		sourceColumn: status
+		sortByColumn: 'status_rank'
+
+		annotation SummarizationSetBy = User
+
+	column 'n_affected'
+		dataType: int64
+		lineageTag: c48632c5-43dd-5ad7-97ca-d1a10933e242
+		summarizeBy: none
+		sourceColumn: n_affected
+
+		annotation SummarizationSetBy = User
+
+	column 'detail'
+		dataType: string
+		lineageTag: 687ef75b-4c2b-5488-9ce3-e7d2709e1a44
+		summarizeBy: none
+		sourceColumn: detail
+
+		annotation SummarizationSetBy = User
+
+	column 'control_label'
+		dataType: string
+		lineageTag: 480185fd-f6bf-5aa9-8840-b427d775878c
+		summarizeBy: none
+		sourceColumn: control_label
+
+		annotation SummarizationSetBy = User
+
+	column 'status_rank'
+		dataType: int64
+		isHidden
+		lineageTag: f5b183bf-0fca-5fe4-babc-28009ca8aff3
+		summarizeBy: none
+		sourceColumn: status_rank
+
+		annotation SummarizationSetBy = User
+
+	partition fact_controls = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "fact_controls.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"date", type date}, {"control", type text}, {"status", type text}, {"n_affected", Int64.Type}, {"detail", type text}, {"control_label", type text}, {"status_rank", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

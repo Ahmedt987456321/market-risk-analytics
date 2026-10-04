@@ -1,0 +1,39 @@
+# Synthetic trading book. This is NOT any real firm's book.
+#
+# Sizes are target GBP market values on the start date (negative = short).
+# Quantities are derived from start-date prices so the book is internally
+# consistent. Daily trades are random but seeded, so every run is reproducible.
+#
+# Rates: quantity is zero-coupon face value; the target is its present value.
+# FX:    quantity is an amount of the foreign currency held.
+
+start: 2024-01-02
+seed: 20240102
+daily_trade_probability: 0.08
+trade_size_range: [0.02, 0.10]   # fraction of the starting size, either direction
+
+targets_gbp:
+  HSBA: 12000000
+  AZN: 10000000
+  SHEL: 9000000
+  ULVR: 6000000
+  BP: -4000000
+  BARC: 5000000
+  RIO: 6000000
+  GSK: 4000000
+  LSEG: 5000000
+  VOD: -2000000
+  AAPL: 8000000
+  MSFT: 8000000
+  NVDA: 7000000
+  JPM: 5000000
+  GILT_5Y: 25000000
+  GILT_10Y: 20000000
+  GILT_20Y: -10000000
+  UST_2Y: 10000000
+  UST_10Y: -8000000
+  USD: 15000000
+  EUR: -8000000
+  JPY: 5000000
+  BRENT: 6000000
+  GOLD: 4000000

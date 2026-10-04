@@ -1,0 +1,99 @@
+table fact_backtest
+	lineageTag: f01786f6-ad81-5ca5-ab9a-04541a6fc76a
+
+	measure 'Exceptions (99%)' = VAR m = SELECTEDVALUE ( dim_method[method], "hs_equal" ) RETURN CALCULATE ( SUM ( fact_backtest[exception_99] ), fact_backtest[method] = m )
+		formatString: 0
+		lineageTag: e054f93b-37c2-5d20-9262-f484e760cfc2
+
+	measure 'Days tested' = VAR m = SELECTEDVALUE ( dim_method[method], "hs_equal" ) RETURN CALCULATE ( COUNTROWS ( fact_backtest ), fact_backtest[method] = m )
+		formatString: 0
+		lineageTag: 519b71f4-2820-57e7-b209-338c77271728
+
+	measure 'Expected exceptions' = [Days tested] * 0.01
+		formatString: 0.0
+		lineageTag: df2f0169-28ea-58f2-bdda-03774c5e7f0d
+
+	measure 'Exception rate (99%)' = DIVIDE ( [Exceptions (99%)], [Days tested] )
+		formatString: 0.00%
+		lineageTag: db9fe3a7-89a9-5ffe-8b08-1930565dc5c1
+
+	measure 'Basel zone, last 250 days' = VAR m = SELECTEDVALUE ( dim_method[method], "hs_equal" ) VAR t = TOPN ( 250, FILTER ( ALL ( fact_backtest ), fact_backtest[method] = m ), fact_backtest[date], DESC ) VAR x = SUMX ( t, fact_backtest[exception_99] ) RETURN SWITCH ( TRUE (), x <= 4, "Green", x <= 9, "Yellow", "Red" ) & " (" & x & " exceptions)"
+		lineageTag: 36d38d55-b44d-5f29-bd54-a92b6c2bd5a6
+
+	measure 'Daily P&L (GBP m)' = CALCULATE ( SUM ( fact_backtest[pnl] ), fact_backtest[method] = "hs_equal" ) / 1e6
+		formatString: #,0.00
+		lineageTag: ce6f844a-b2ee-5e4a-b20d-91623e3408f1
+
+	measure 'Minus 99% VaR (GBP m)' = VAR m = SELECTEDVALUE ( dim_method[method], "hs_equal" ) RETURN CALCULATE ( - SUM ( fact_backtest[var99] ), fact_backtest[method] = m ) / 1e6
+		formatString: #,0.00
+		lineageTag: b46fbf86-e225-5816-b1cf-1882b6688bcf
+
+	column 'date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: 77d7c10d-7459-5a63-8f16-804b848ec8f0
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+	column 'method'
+		dataType: string
+		lineageTag: 9ea8de82-4b7c-5874-90c3-f578b0f896eb
+		summarizeBy: none
+		sourceColumn: method
+
+		annotation SummarizationSetBy = User
+
+	column 'var95'
+		dataType: double
+		lineageTag: 7a76df79-f0ba-5b79-a246-0257ecde1cb6
+		summarizeBy: none
+		sourceColumn: var95
+
+		annotation SummarizationSetBy = User
+
+	column 'var99'
+		dataType: double
+		lineageTag: 36fdf246-f985-594f-8f14-da7a74cf8150
+		summarizeBy: none
+		sourceColumn: var99
+
+		annotation SummarizationSetBy = User
+
+	column 'pnl'
+		dataType: double
+		lineageTag: e1823d11-136b-5b98-b0c3-0c238d766276
+		summarizeBy: none
+		sourceColumn: pnl
+
+		annotation SummarizationSetBy = User
+
+	column 'exception_99'
+		dataType: int64
+		lineageTag: be355dbc-e9aa-5f4b-8652-49fba155f994
+		summarizeBy: none
+		sourceColumn: exception_99
+
+		annotation SummarizationSetBy = User
+
+	column 'exception_95'
+		dataType: int64
+		lineageTag: d85c3f32-ea6c-5716-9a1a-4cbb4298dd73
+		summarizeBy: none
+		sourceColumn: exception_95
+
+		annotation SummarizationSetBy = User
+
+	partition fact_backtest = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "fact_backtest.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"date", type date}, {"method", type text}, {"var95", type number}, {"var99", type number}, {"pnl", type number}, {"exception_99", Int64.Type}, {"exception_95", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

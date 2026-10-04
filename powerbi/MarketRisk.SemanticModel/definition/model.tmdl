@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["BiFolder", "dim_instrument", "dim_desk", "dim_date", "dim_method", "dim_scenario", "fact_position_daily", "fact_backtest", "fact_risk", "fact_stress", "fact_var_explain", "fact_controls", "fact_gs_var"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+ref table dim_instrument
+ref table dim_desk
+ref table dim_date
+ref table dim_method
+ref table dim_scenario
+ref table fact_position_daily
+ref table fact_backtest
+ref table fact_risk
+ref table fact_stress
+ref table fact_var_explain
+ref table fact_controls
+ref table fact_gs_var

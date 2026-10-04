@@ -1,0 +1,46 @@
+# Thresholds for the daily control framework. Every threshold here is a
+# judgement call; the reasoning is in DECISIONS.md.
+
+staleness:
+  warn_after_bdays: 1     # one missed business day is often a local holiday
+  fail_after_bdays: 3
+
+outliers:
+  ewma_lambda: 0.94       # RiskMetrics daily decay
+  z_threshold: 6.0
+  min_history: 60
+
+history:
+  min_observations: 750   # about 3 years, enough for a 99% historical VaR window
+  window_years: 5
+
+cross_source:
+  tolerance_pct: 0.75     # BoE fixes at 4pm London, Yahoo closes later; timing gap is expected
+
+revisions:
+  tolerance_pct: 0.1
+  grace_bdays: 5          # recent revisions are normal (late prints); older ones are not
+
+valid_ranges:
+  yield_pct: [-2.0, 25.0]
+
+reconciliation:
+  tolerance: 1.0e-6
+
+panel:
+  ffill_limit_bdays: 5
+
+sla:
+  deadline_local: "07:30" # report for T due by 07:30 London on T+1
+  timezone: Europe/London
+
+gaps:
+  lookback_bdays: 20
+  min_peers: 3
+  peer_share: 0.75        # flag a missing day when at least this share of same-source, same-currency peers have a price
+
+futures_roll:
+  threshold_pct: 2.0      # futures vs roll-free proxy, one-day return gap
+
+dividend_check:
+  tolerance_bp: 1.0       # own total return vs Yahoo adjusted return, per day, US stocks only

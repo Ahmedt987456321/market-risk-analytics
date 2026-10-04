@@ -1,0 +1,59 @@
+# Instrument universe. One row per risk factor the book can hold.
+#
+# quote:
+#   price     - traded price in `currency` (after price_scale)
+#   yield_pct - zero-coupon yield in percent; priced as a zero-coupon bond of tenor_years
+#   fx        - units of `currency` per 1 GBP (Bank of England convention)
+#
+# price_scale: Yahoo quotes LSE stocks in pence (GBX). 0.01 converts to GBP.
+
+history_start: 2007-01-01
+
+fx_map:          # currency -> instrument that converts it to GBP
+  USD: USD
+  EUR: EUR
+  JPY: JPY
+
+instruments:
+  # UK Equities (Yahoo, pence)
+  - {id: HSBA, name: HSBC Holdings,         asset_class: equity, desk: UK Equities, source: yahoo, ticker: HSBA.L, quote: price, currency: GBP, price_scale: 0.01}
+  - {id: AZN,  name: AstraZeneca,           asset_class: equity, desk: UK Equities, source: yahoo, ticker: AZN.L,  quote: price, currency: GBP, price_scale: 0.01}
+  - {id: SHEL, name: Shell,                 asset_class: equity, desk: UK Equities, source: yahoo, ticker: SHEL.L, quote: price, currency: GBP, price_scale: 0.01}
+  - {id: ULVR, name: Unilever,              asset_class: equity, desk: UK Equities, source: yahoo, ticker: ULVR.L, quote: price, currency: GBP, price_scale: 0.01}
+  - {id: BP,   name: BP,                    asset_class: equity, desk: UK Equities, source: yahoo, ticker: BP.L,   quote: price, currency: GBP, price_scale: 0.01}
+  - {id: BARC, name: Barclays,              asset_class: equity, desk: UK Equities, source: yahoo, ticker: BARC.L, quote: price, currency: GBP, price_scale: 0.01}
+  - {id: RIO,  name: Rio Tinto,             asset_class: equity, desk: UK Equities, source: yahoo, ticker: RIO.L,  quote: price, currency: GBP, price_scale: 0.01}
+  - {id: GSK,  name: GSK,                   asset_class: equity, desk: UK Equities, source: yahoo, ticker: GSK.L,  quote: price, currency: GBP, price_scale: 0.01}
+  - {id: LSEG, name: London Stock Exchange Group, asset_class: equity, desk: UK Equities, source: yahoo, ticker: LSEG.L, quote: price, currency: GBP, price_scale: 0.01}
+  - {id: VOD,  name: Vodafone,              asset_class: equity, desk: UK Equities, source: yahoo, ticker: VOD.L,  quote: price, currency: GBP, price_scale: 0.01}
+
+  # US Equities (Yahoo, USD)
+  - {id: AAPL, name: Apple,                 asset_class: equity, desk: US Equities, source: yahoo, ticker: AAPL, quote: price, currency: USD}
+  - {id: MSFT, name: Microsoft,             asset_class: equity, desk: US Equities, source: yahoo, ticker: MSFT, quote: price, currency: USD}
+  - {id: NVDA, name: NVIDIA,                asset_class: equity, desk: US Equities, source: yahoo, ticker: NVDA, quote: price, currency: USD}
+  - {id: JPM,  name: JPMorgan Chase,        asset_class: equity, desk: US Equities, source: yahoo, ticker: JPM,  quote: price, currency: USD}
+
+  # Rates (BoE nominal zero-coupon gilt curve; FRED constant-maturity Treasuries)
+  - {id: GILT_5Y,  name: UK gilt 5y zero-coupon,  asset_class: rates, desk: Rates, source: boe,  ticker: IUDSNZC, quote: yield_pct, currency: GBP, tenor_years: 5}
+  - {id: GILT_10Y, name: UK gilt 10y zero-coupon, asset_class: rates, desk: Rates, source: boe,  ticker: IUDMNZC, quote: yield_pct, currency: GBP, tenor_years: 10}
+  - {id: GILT_20Y, name: UK gilt 20y zero-coupon, asset_class: rates, desk: Rates, source: boe,  ticker: IUDLNZC, quote: yield_pct, currency: GBP, tenor_years: 20}
+  - {id: UST_2Y,   name: US Treasury 2y,          asset_class: rates, desk: Rates, source: fred, ticker: DGS2,    quote: yield_pct, currency: USD, tenor_years: 2}
+  - {id: UST_10Y,  name: US Treasury 10y,         asset_class: rates, desk: Rates, source: fred, ticker: DGS10,   quote: yield_pct, currency: USD, tenor_years: 10}
+
+  # FX (BoE 4pm London spot, foreign currency per GBP). A position is an amount of that currency.
+  - {id: USD, name: US dollar,     asset_class: fx, desk: FX, source: boe, ticker: XUDLUSS, quote: fx, currency: USD}
+  - {id: EUR, name: Euro,          asset_class: fx, desk: FX, source: boe, ticker: XUDLERS, quote: fx, currency: EUR}
+  - {id: JPY, name: Japanese yen,  asset_class: fx, desk: FX, source: boe, ticker: XUDLJYS, quote: fx, currency: JPY}
+
+  # Commodities (Yahoo front-month futures, USD)
+  # Valued at the front-month future; risk scenarios use a fund that rolls internally,
+  # because the continuous futures series jumps at each roll (INCIDENTS 004, DECISIONS 011).
+  # Historical stress windows use stress_proxy where set: BNO starts in 2010, FRED Brent spot goes back to 1987.
+  - {id: BRENT, name: Brent crude front month, asset_class: commodity, desk: Commodities, source: yahoo, ticker: BZ=F, quote: price, currency: USD, returns_proxy: BNO, stress_proxy: "fred:DCOILBRENTEU"}
+  - {id: GOLD,  name: Gold front month,        asset_class: commodity, desk: Commodities, source: yahoo, ticker: GC=F, quote: price, currency: USD, returns_proxy: GLD}
+
+# Independent second source for the same quantity. Used by the cross-source control only.
+cross_checks:
+  - {instrument: USD, source: yahoo, ticker: GBPUSD=X}
+  - {instrument: EUR, source: yahoo, ticker: GBPEUR=X}
+  - {instrument: JPY, source: yahoo, ticker: GBPJPY=X}

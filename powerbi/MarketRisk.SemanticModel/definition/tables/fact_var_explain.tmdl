@@ -1,0 +1,83 @@
+table fact_var_explain
+	lineageTag: 01b91784-090f-5a8b-952c-5485180c27de
+
+	measure 'Change in 99% VaR since previous day (GBP m)' = ( CALCULATE ( SUM ( fact_var_explain[value_gbp] ), REMOVEFILTERS ( fact_var_explain ), fact_var_explain[measure] = "VaR99", fact_var_explain[component] = "current" ) - CALCULATE ( SUM ( fact_var_explain[value_gbp] ), REMOVEFILTERS ( fact_var_explain ), fact_var_explain[measure] = "VaR99", fact_var_explain[component] = "previous" ) ) / 1e6
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: 0968ed84-3fe9-5637-9eb3-30c9d7428591
+
+	measure 'Change by cause (GBP m)' = CALCULATE ( SUM ( fact_var_explain[value_gbp] ), fact_var_explain[measure] = "VaR99", fact_var_explain[component] IN { "positions", "levels", "window" } ) / 1e6
+		formatString: +#,0.00;-#,0.00;0.00
+		lineageTag: eab72947-f87b-5049-896a-36347f2fd56e
+
+	column 'date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: ab26405f-4e44-58e9-b01a-9a60c6edded5
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+	column 'prev_date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: 420d11f1-b694-575d-9692-ef8c21d9650b
+		summarizeBy: none
+		sourceColumn: prev_date
+
+		annotation SummarizationSetBy = User
+
+	column 'measure'
+		dataType: string
+		lineageTag: 560e6227-7830-541f-9e15-d4b0059d8233
+		summarizeBy: none
+		sourceColumn: measure
+
+		annotation SummarizationSetBy = User
+
+	column 'component'
+		dataType: string
+		lineageTag: 6bdb7342-1b29-50ed-b221-a3718e4f0368
+		summarizeBy: none
+		sourceColumn: component
+
+		annotation SummarizationSetBy = User
+
+	column 'value_gbp'
+		dataType: double
+		lineageTag: 262144d5-4551-5623-9d31-5bd324e61bde
+		summarizeBy: none
+		sourceColumn: value_gbp
+
+		annotation SummarizationSetBy = User
+
+	column 'component_label'
+		dataType: string
+		lineageTag: 2a02aae2-7d28-5bce-a653-239fd65b3579
+		summarizeBy: none
+		sourceColumn: component_label
+		sortByColumn: 'component_order'
+
+		annotation SummarizationSetBy = User
+
+	column 'component_order'
+		dataType: int64
+		isHidden
+		lineageTag: 84013556-19df-52f5-82c2-14cef413faf3
+		summarizeBy: none
+		sourceColumn: component_order
+
+		annotation SummarizationSetBy = User
+
+	partition fact_var_explain = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "fact_var_explain.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"date", type date}, {"prev_date", type date}, {"measure", type text}, {"component", type text}, {"value_gbp", type number}, {"component_label", type text}, {"component_order", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

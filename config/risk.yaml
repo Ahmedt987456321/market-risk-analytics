@@ -1,0 +1,23 @@
+# Risk engine settings. Reasoning for each choice is in DECISIONS.md (012).
+
+window_days: 1260          # about five years of market days; Goldman's UK Pillar 3 says its VaR samples five years
+confidence: [0.95, 0.99]   # 95% = Goldman's risk-management VaR, 99% = regulatory (10-K and Pillar 3)
+es_confidence: 0.975       # the FRTB standard
+market_day_min_share: 0.5  # a date counts as a market day if at least half the instruments have a real price
+
+# Chosen before seeing any backtest, so the backtest can judge them fairly.
+primary_method: hs_equal
+methods:
+  hs_equal: {}
+  hs_weighted: {decay: 0.995}   # half-life about 138 market days; Goldman weights its history but does not publish the decay
+  parametric: {decay: 0.94}     # delta-normal with RiskMetrics EWMA covariance
+
+backtest:
+  start: 2024-01-03          # first day after the book opens
+  traffic_light_days: 250
+
+# Review levels for the "Attention" list in the daily commentary. Our own choices.
+commentary:
+  concentration_share: 0.10   # flag a single position above 10% of gross exposure
+  var_move_share: 0.10        # flag a one-day VaR move above 10%
+  independence_p: 0.05        # flag clustered backtest exceptions (Christoffersen)

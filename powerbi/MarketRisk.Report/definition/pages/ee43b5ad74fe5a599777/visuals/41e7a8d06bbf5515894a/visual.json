@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "41e7a8d06bbf5515894a",
+  "position": {
+    "x": 648,
+    "y": 84,
+    "z": 3000,
+    "height": 104,
+    "width": 296,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_var_explain"
+                    }
+                  },
+                  "Property": "Change in 99% VaR since previous day (GBP m)"
+                }
+              },
+              "queryRef": "fact_var_explain.Change in 99% VaR since previous day (GBP m)",
+              "nativeQueryRef": "Change in 99% VaR since previous day (GBP m)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

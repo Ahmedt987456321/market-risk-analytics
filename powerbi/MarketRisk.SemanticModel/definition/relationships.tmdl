@@ -1,0 +1,19 @@
+relationship cbe8f049-8a0e-550f-acbe-036644826398
+	fromColumn: fact_position_daily.'instrument_id'
+	toColumn: dim_instrument.'instrument_id'
+
+relationship 1e258c49-1e4f-5f19-8971-4be36116254b
+	fromColumn: fact_position_daily.'date'
+	toColumn: dim_date.'date'
+
+relationship 377bb8a2-27a4-5f7b-80de-0f0e7ffd6a17
+	fromColumn: fact_backtest.'date'
+	toColumn: dim_date.'date'
+
+relationship 20c848b3-d621-50c6-8539-c28126dc7d71
+	fromColumn: fact_backtest.'method'
+	toColumn: dim_method.'method'
+
+relationship c3835b91-12e9-5c97-b094-18b02d3cb9a9
+	fromColumn: dim_instrument.'desk'
+	toColumn: dim_desk.'desk'

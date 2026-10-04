@@ -1,0 +1,174 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "d5fb31f2b35d5c1f8836",
+  "position": {
+    "x": 600,
+    "y": 84,
+    "z": 2000,
+    "height": 596,
+    "width": 656,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "scenario_name"
+                }
+              },
+              "queryRef": "dim_scenario.scenario_name",
+              "nativeQueryRef": "scenario_name",
+              "displayName": "Scenario"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "kind"
+                }
+              },
+              "queryRef": "dim_scenario.kind",
+              "nativeQueryRef": "kind",
+              "displayName": "Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "window"
+                }
+              },
+              "queryRef": "dim_scenario.window",
+              "nativeQueryRef": "window",
+              "displayName": "Window"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "Scenario P&L (GBP m)"
+                }
+              },
+              "queryRef": "dim_scenario.Scenario P&L (GBP m)",
+              "nativeQueryRef": "Scenario P&L (GBP m)",
+              "displayName": "P&L (GBP m)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "Worst point in window (GBP m)"
+                }
+              },
+              "queryRef": "dim_scenario.Worst point in window (GBP m)",
+              "nativeQueryRef": "Worst point in window (GBP m)",
+              "displayName": "Worst point (GBP m)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_scenario"
+                    }
+                  },
+                  "Property": "largest_loss"
+                }
+              },
+              "queryRef": "dim_scenario.largest_loss",
+              "nativeQueryRef": "largest_loss",
+              "displayName": "Largest losses"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_scenario"
+                  }
+                },
+                "Property": "Scenario P&L (GBP m)"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Scenario detail'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Worst point is the deepest loss on any day inside a historical window. Hypothetical shocks are instant.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

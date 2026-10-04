@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "82da7ed5288851379c05",
+  "position": {
+    "x": 336,
+    "y": 84,
+    "z": 2000,
+    "height": 104,
+    "width": 296,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_risk"
+                    }
+                  },
+                  "Property": "97.5% ES (GBP m)"
+                }
+              },
+              "queryRef": "fact_risk.97.5% ES (GBP m)",
+              "nativeQueryRef": "97.5% ES (GBP m)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

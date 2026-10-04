@@ -1,0 +1,90 @@
+table dim_scenario
+	lineageTag: ee23a810-999f-5cbc-be26-69494c369273
+
+	measure 'Scenario P&L (GBP m)' = SUM ( dim_scenario[pnl_gbp] ) / 1e6
+		formatString: +#,0.0;-#,0.0;0.0
+		lineageTag: f9d8964a-4fcc-5c5a-9643-b50e44c71c9d
+
+	measure 'Worst point in window (GBP m)' = SUM ( dim_scenario[worst_point_gbp] ) / 1e6
+		formatString: +#,0.0;-#,0.0;0.0
+		lineageTag: ee85fbb4-061f-5bc4-80b0-a14e20f4c78d
+
+	measure 'Worst stress scenario' = VAR t = TOPN ( 1, ALL ( dim_scenario ), dim_scenario[pnl_gbp], ASC ) RETURN MAXX ( t, dim_scenario[scenario_name] & ": " & FORMAT ( dim_scenario[pnl_gbp] / 1e6, "#,0.0" ) & "m" )
+		lineageTag: 505aa967-4f13-5b90-a591-2d11bf7d7504
+
+	column 'scenario'
+		dataType: string
+		lineageTag: 09e83e3a-edfe-5c24-bbd4-f628eceac4dd
+		summarizeBy: none
+		sourceColumn: scenario
+
+		annotation SummarizationSetBy = User
+
+	column 'scenario_name'
+		dataType: string
+		lineageTag: e5e73718-ecf4-534a-a1b4-a4013cd68eea
+		summarizeBy: none
+		sourceColumn: scenario_name
+
+		annotation SummarizationSetBy = User
+
+	column 'description'
+		dataType: string
+		lineageTag: ac1ad0af-43f5-5054-ab55-a72e3b3b44fa
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = User
+
+	column 'kind'
+		dataType: string
+		lineageTag: de894013-0fb1-585b-8085-fbb8c14c0ac4
+		summarizeBy: none
+		sourceColumn: kind
+
+		annotation SummarizationSetBy = User
+
+	column 'window'
+		dataType: string
+		lineageTag: 9b32123d-b307-53df-a97b-bfa92b9727b2
+		summarizeBy: none
+		sourceColumn: window
+
+		annotation SummarizationSetBy = User
+
+	column 'pnl_gbp'
+		dataType: double
+		lineageTag: 49896faf-2b87-5353-b4ab-9003935874af
+		summarizeBy: none
+		sourceColumn: pnl_gbp
+
+		annotation SummarizationSetBy = User
+
+	column 'worst_point_gbp'
+		dataType: double
+		lineageTag: 6ee10b76-66a4-536a-aa29-461c8cb32fd6
+		summarizeBy: none
+		sourceColumn: worst_point_gbp
+
+		annotation SummarizationSetBy = User
+
+	column 'largest_loss'
+		dataType: string
+		lineageTag: 03043eb7-3bc8-5864-9b3e-0602429b3eae
+		summarizeBy: none
+		sourceColumn: largest_loss
+
+		annotation SummarizationSetBy = User
+
+	partition dim_scenario = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "dim_scenario.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"scenario", type text}, {"scenario_name", type text}, {"description", type text}, {"kind", type text}, {"window", type text}, {"pnl_gbp", type number}, {"worst_point_gbp", type number}, {"largest_loss", type text}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

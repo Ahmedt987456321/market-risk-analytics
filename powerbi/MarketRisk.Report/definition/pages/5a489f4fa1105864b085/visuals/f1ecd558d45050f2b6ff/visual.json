@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "f1ecd558d45050f2b6ff",
+  "position": {
+    "x": 24,
+    "y": 84,
+    "z": 1000,
+    "height": 104,
+    "width": 292,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Latest quarter, total (USD m)"
+                }
+              },
+              "queryRef": "fact_gs_var.Latest quarter, total (USD m)",
+              "nativeQueryRef": "Latest quarter, total (USD m)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

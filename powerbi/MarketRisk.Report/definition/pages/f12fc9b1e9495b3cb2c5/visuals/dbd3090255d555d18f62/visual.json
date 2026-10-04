@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "dbd3090255d555d18f62",
+  "position": {
+    "x": 856,
+    "y": 84,
+    "z": 3000,
+    "height": 104,
+    "width": 400,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_controls"
+                    }
+                  },
+                  "Property": "Failures"
+                }
+              },
+              "queryRef": "fact_controls.Failures",
+              "nativeQueryRef": "Failures"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

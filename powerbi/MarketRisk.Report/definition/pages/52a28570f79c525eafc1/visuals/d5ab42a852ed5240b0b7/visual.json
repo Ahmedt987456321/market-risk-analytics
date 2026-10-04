@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "d5ab42a852ed5240b0b7",
+  "position": {
+    "x": 24,
+    "y": 400,
+    "z": 2000,
+    "height": 280,
+    "width": 808,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_instrument"
+                    }
+                  },
+                  "Property": "name"
+                }
+              },
+              "queryRef": "dim_instrument.name",
+              "nativeQueryRef": "name",
+              "displayName": "Position"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_instrument"
+                    }
+                  },
+                  "Property": "desk"
+                }
+              },
+              "queryRef": "dim_instrument.desk",
+              "nativeQueryRef": "desk",
+              "displayName": "Desk"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_position_daily"
+                    }
+                  },
+                  "Property": "Market value today (GBP m)"
+                }
+              },
+              "queryRef": "fact_position_daily.Market value today (GBP m)",
+              "nativeQueryRef": "Market value today (GBP m)",
+              "displayName": "Market value (GBP m)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_position_daily"
+                    }
+                  },
+                  "Property": "Share of gross exposure"
+                }
+              },
+              "queryRef": "fact_position_daily.Share of gross exposure",
+              "nativeQueryRef": "Share of gross exposure",
+              "displayName": "Share of gross"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_position_daily"
+                  }
+                },
+                "Property": "Share of gross exposure"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Positions on 29 Sep 2026'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Largest first. A negative market value is a short position.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

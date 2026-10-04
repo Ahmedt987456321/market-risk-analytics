@@ -1,0 +1,49 @@
+table dim_method
+	lineageTag: f7a59321-2e49-59d5-b27f-67aedfaa7b78
+
+	column 'method'
+		dataType: string
+		lineageTag: d571765c-e370-56c9-8594-0de98f29725d
+		summarizeBy: none
+		sourceColumn: method
+
+		annotation SummarizationSetBy = User
+
+	column 'method_label'
+		dataType: string
+		lineageTag: b211dd3b-fa07-56c1-9c87-067c5addf234
+		summarizeBy: none
+		sourceColumn: method_label
+		sortByColumn: 'method_order'
+
+		annotation SummarizationSetBy = User
+
+	column 'is_primary'
+		dataType: int64
+		lineageTag: 0de24eee-f15c-5c35-943b-a0b29d204ac7
+		summarizeBy: none
+		sourceColumn: is_primary
+
+		annotation SummarizationSetBy = User
+
+	column 'method_order'
+		dataType: int64
+		isHidden
+		lineageTag: efff58ce-e1d0-558e-9174-ce5bd01baa6f
+		summarizeBy: none
+		sourceColumn: method_order
+
+		annotation SummarizationSetBy = User
+
+	partition dim_method = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "dim_method.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"method", type text}, {"method_label", type text}, {"is_primary", Int64.Type}, {"method_order", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

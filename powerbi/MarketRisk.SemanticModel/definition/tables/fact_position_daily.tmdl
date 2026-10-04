@@ -1,0 +1,72 @@
+table fact_position_daily
+	lineageTag: 79e7a0df-8d44-57b4-8876-ccbb8fcfcbd4
+
+	measure 'Gross exposure (GBP m)' = VAR d = CALCULATE ( MAX ( fact_position_daily[date] ), ALL ( fact_position_daily ) ) RETURN CALCULATE ( SUMX ( fact_position_daily, ABS ( fact_position_daily[market_value_gbp] ) ), fact_position_daily[date] = d ) / 1e6
+		formatString: #,0.0
+		lineageTag: f36fd1bb-5693-5666-8f2a-814c24d37267
+
+	measure 'Net market value (GBP m)' = SUM ( fact_position_daily[market_value_gbp] ) / 1e6
+		formatString: #,0.0
+		lineageTag: 8cefe3b9-9b1b-5bb4-b14d-4452fb44ddb7
+
+	measure 'Market value today (GBP m)' = VAR d = CALCULATE ( MAX ( fact_position_daily[date] ), ALL ( fact_position_daily ) ) RETURN CALCULATE ( SUM ( fact_position_daily[market_value_gbp] ), fact_position_daily[date] = d ) / 1e6
+		formatString: #,0.00
+		lineageTag: f55ae144-4b2c-5785-8144-343f079e92e9
+
+	measure 'Share of gross exposure' = VAR d = CALCULATE ( MAX ( fact_position_daily[date] ), ALL ( fact_position_daily ) ) RETURN DIVIDE ( CALCULATE ( SUMX ( fact_position_daily, ABS ( fact_position_daily[market_value_gbp] ) ), fact_position_daily[date] = d ), CALCULATE ( SUMX ( fact_position_daily, ABS ( fact_position_daily[market_value_gbp] ) ), REMOVEFILTERS ( dim_instrument ), REMOVEFILTERS ( dim_desk ), fact_position_daily[date] = d ) )
+		formatString: 0.0%
+		lineageTag: 75ae9048-7fc8-5052-a7c5-1c720fca148c
+
+	column 'date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: 4a9fb410-8ef1-51a4-96a8-f3d97ceda421
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+	column 'instrument_id'
+		dataType: string
+		lineageTag: 3c4c1a66-47e1-5b1b-b809-032074471608
+		summarizeBy: none
+		sourceColumn: instrument_id
+
+		annotation SummarizationSetBy = User
+
+	column 'quantity'
+		dataType: double
+		lineageTag: a9f11323-e7aa-5341-8e0e-a9ad516c73d5
+		summarizeBy: none
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = User
+
+	column 'unit_value_gbp'
+		dataType: double
+		lineageTag: 9d6cefd1-4046-584d-9be1-5c555bc98604
+		summarizeBy: none
+		sourceColumn: unit_value_gbp
+
+		annotation SummarizationSetBy = User
+
+	column 'market_value_gbp'
+		dataType: double
+		lineageTag: be4f3287-6313-580a-a8a5-ec26cc5e1da6
+		summarizeBy: none
+		sourceColumn: market_value_gbp
+
+		annotation SummarizationSetBy = User
+
+	partition fact_position_daily = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "fact_position_daily.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"date", type date}, {"instrument_id", type text}, {"quantity", type number}, {"unit_value_gbp", type number}, {"market_value_gbp", type number}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,4 @@
+expression BiFolder = "C:\dev\market-risk-engine\exports\bi\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 098b6ec9-7df7-502e-8f1b-89df359e3677
+
+	annotation PBI_ResultType = Text

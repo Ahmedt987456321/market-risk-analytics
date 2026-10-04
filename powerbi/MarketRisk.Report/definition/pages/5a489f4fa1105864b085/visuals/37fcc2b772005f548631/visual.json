@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "37fcc2b772005f548631",
+  "position": {
+    "x": 332,
+    "y": 84,
+    "z": 2000,
+    "height": 104,
+    "width": 292,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Quarters published"
+                }
+              },
+              "queryRef": "fact_gs_var.Quarters published",
+              "nativeQueryRef": "Quarters published"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

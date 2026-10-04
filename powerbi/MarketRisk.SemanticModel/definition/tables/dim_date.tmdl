@@ -1,0 +1,64 @@
+table dim_date
+	lineageTag: 887180aa-436a-58f4-9ade-32d490ca1926
+
+	column 'date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: 23b5491f-e6f6-507e-84c3-5cb55f8d1c5a
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+	column 'year'
+		dataType: int64
+		lineageTag: 23216b60-4b50-5604-88ae-98429cb5c6bb
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = User
+
+	column 'quarter'
+		dataType: int64
+		lineageTag: 24f05e1e-fd54-5d04-be1d-2ef70083f6e1
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = User
+
+	column 'month'
+		dataType: int64
+		lineageTag: 0bd9c2a9-dbd4-5b0d-a89a-635270842a82
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = User
+
+	column 'month_name'
+		dataType: string
+		lineageTag: ab81a230-a884-5579-859c-4f6b16708610
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = User
+
+	column 'weekday'
+		dataType: string
+		lineageTag: 9083ee2a-5d34-5add-90fb-91f36ce941e3
+		summarizeBy: none
+		sourceColumn: weekday
+
+		annotation SummarizationSetBy = User
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(BiFolder & "dim_date.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, Table.ColumnNames(Promoted)),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"date", type date}, {"year", Int64.Type}, {"quarter", Int64.Type}, {"month", Int64.Type}, {"month_name", type text}, {"weekday", type text}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

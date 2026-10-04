@@ -1,0 +1,160 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "dd9bf59d463c5d2a8aa3",
+  "position": {
+    "x": 640,
+    "y": 204,
+    "z": 4000,
+    "height": 476,
+    "width": 616,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "period_end"
+                }
+              },
+              "queryRef": "fact_gs_var.period_end",
+              "nativeQueryRef": "period_end",
+              "displayName": "Quarter",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Interest rates (USD m)"
+                }
+              },
+              "queryRef": "fact_gs_var.Interest rates (USD m)",
+              "nativeQueryRef": "Interest rates (USD m)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Equity prices (USD m)"
+                }
+              },
+              "queryRef": "fact_gs_var.Equity prices (USD m)",
+              "nativeQueryRef": "Equity prices (USD m)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Currency rates (USD m)"
+                }
+              },
+              "queryRef": "fact_gs_var.Currency rates (USD m)",
+              "nativeQueryRef": "Currency rates (USD m)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_gs_var"
+                    }
+                  },
+                  "Property": "Commodity prices (USD m)"
+                }
+              },
+              "queryRef": "fact_gs_var.Commodity prices (USD m)",
+              "nativeQueryRef": "Commodity prices (USD m)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_gs_var"
+                  }
+                },
+                "Property": "period_end"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'By risk category (USD m)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Interest rates are the largest category in every quarter.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

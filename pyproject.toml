@@ -1,0 +1,9 @@
+[project]
+name = "market-risk-analytics"
+version = "0.1.0"
+description = "Market risk analytics and reporting engine on public data"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

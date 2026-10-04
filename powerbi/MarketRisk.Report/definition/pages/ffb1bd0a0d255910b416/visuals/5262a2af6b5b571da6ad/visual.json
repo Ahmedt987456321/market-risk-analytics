@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "5262a2af6b5b571da6ad",
+  "position": {
+    "x": 630,
+    "y": 84,
+    "z": 3000,
+    "height": 104,
+    "width": 198,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_backtest"
+                    }
+                  },
+                  "Property": "Expected exceptions"
+                }
+              },
+              "queryRef": "fact_backtest.Expected exceptions",
+              "nativeQueryRef": "Expected exceptions"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
